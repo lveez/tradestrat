@@ -11,8 +11,14 @@
 
 Use command like `/set boxlocation "locationname"`
 
-### Der Riese
+#### Der Riese
 
-* Power -> power
-* Catwalk -> catwalk
-* 
+power, catwalk, trench, mp40, type100, tommy
+
+### Ascension
+
+power, pap, speed, mule, phd, spawn, stam, stamlander
+
+### Shangri-La
+
+power, mule, spawn, ak
