@@ -6,12 +6,13 @@
 * Dog health maxed on Der Riese
 * Can set box location with console command
 * Perks given, infinite downs
+* SPH, timer and trade average hud
 
 ## Box Location Names
 
 Use command like `/set boxlocation "locationname"`
 
-#### Der Riese
+### Der Riese
 
 power, catwalk, trench, mp40, type100, tommy
 
@@ -22,3 +23,5 @@ power, pap, speed, mule, phd, spawn, stam, stamlander
 ### Shangri-La
 
 power, mule, spawn, ak
+
+[Mod Download](https://www.mediafire.com/file/44cf6in6u6m1uem/tradestratv3.zip/file)
