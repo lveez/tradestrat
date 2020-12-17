@@ -3965,7 +3965,7 @@ chalk_round_over()
 round_think()
 {
 
-	level.round_number = 80;
+	level.round_number = 100;
 	level.dog_health = 1600;
 	level.first_round = false;
 	level.zombie_vars["zombie_spawn_delay"] = 0.08;
