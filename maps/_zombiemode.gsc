@@ -1699,6 +1699,8 @@ onPlayerSpawned()
 				self thread watch_for_trade();
 				self.gamejustloaded = true;
 				self thread give_perks();
+				if ( level.script == "zombie_pentagon" )
+					self thread enable_traps_five();
 				
 				level.wuen = 0;
 				level.bridge = 0;
@@ -3963,7 +3965,7 @@ chalk_round_over()
 round_think()
 {
 
-	level.round_number = 100;
+	level.round_number = 80;
 	level.dog_health = 1600;
 	level.first_round = false;
 	level.zombie_vars["zombie_spawn_delay"] = 0.08;
@@ -6842,11 +6844,11 @@ turn_on_power()
 	else if ( level.script == "zombie_cosmodrome" )
 	{
 
-		level.rocket_lifter_arm waittill("rotatedone");
-		wait( 2 );
+		/*level.rocket_lifter_arm waittill("rotatedone");
+		wait( 2 );*/
 		trig = getent( "use_elec_switch" , "targetname" );
 		trig notify( "trigger" );
-		level.rocket_lifter waittill("movedone");
+		/*level.rocket_lifter waittill("movedone");
 		level.rocket_lifter_arm waittill("rotatedone");
 		flag_set( "lander_a_used" );
 		flag_set( "lander_b_used" );
@@ -6855,7 +6857,19 @@ turn_on_power()
 		level.rocket_lifter waittill("movedone");
 		launch_trig = getent( "trig_launch_rocket" , "targetname" );
 		wait( 2 );
-		launch_trig notify( "trigger" );
+		launch_trig notify( "trigger" );*/
+
+		upper_door_model = GetEnt( "rocket_room_top_door", "targetname" );
+		upper_door_model.clip = GetEnt( upper_door_model.target, "targetname" );
+		upper_door_model.clip LinkTo( upper_door_model ); 
+	
+		upper_door_model MoveTo(upper_door_model.origin + upper_door_model.script_vector, 1.5 );
+		level.pack_a_punch_door MoveTo( level.pack_a_punch_door.origin + level.pack_a_punch_door.script_vector, 1.5 );
+		level.pack_a_punch_door.clip NotSolid();
+		level.pack_a_punch_door waittill( "movedone" );
+		level.pack_a_punch_door.clip ConnectPaths();
+
+		flag_set( "rocket_group" );
 
 	}
 	else if ( level.script == "zombie_temple" )
@@ -6863,6 +6877,16 @@ turn_on_power()
 
 		flag_set("left_switch_done");
 		flag_set("right_switch_done");
+
+	}
+	else if ( level.script == "zombie_pentagon" )
+	{
+
+		trig = getent("use_elec_switch","targetname");
+		trig notify( "trigger" );
+
+		wait ( 5 );
+		level.next_thief_round = 1;
 
 	}
 
@@ -6873,6 +6897,8 @@ watch_for_trade()
 
 	has_weapon = false;
 	level.trades = 0;
+
+	pap = GetEnt("zombie_vending_upgrade", "targetname");
 
 	if ( level.script == "zombie_cod5_factory" )
 	{
@@ -6896,7 +6922,7 @@ watch_for_trade()
 
 			wait ( 0.5 );
 
-			if ( !self maps\_zombiemode_weapons::has_weapon_or_upgrade ( "tesla_gun_zm" ) )
+			if ( !self maps\_zombiemode_weapons::has_weapon_or_upgrade ( "tesla_gun_zm" ) && pap.current_weapon == "")
 			{
 
 				has_weapon = false;
@@ -6988,7 +7014,8 @@ give_perks()
 		self maps\_zombiemode_perks::give_perk( "specialty_quickrevive", true );
 		wait( 0.05 );
 
-		self GiveWeapon( "bowie_knife_zm" );
+		if ( self.gamejustloaded )
+			self GiveWeapon( "bowie_knife_zm" );
 
 	}
 	else if ( level.script == "zombie_cosmodrome" )
@@ -7012,7 +7039,12 @@ give_perks()
 	{
 
 		if ( self.gamejustloaded )
-			wait( 5 );
+		{
+
+			wait ( 2 );
+			self GiveWeapon( "bowie_knife_zm" );
+
+		}
 
 		self maps\_zombiemode_perks::give_perk( "specialty_quickrevive", true );
 		wait( 0.05 );
@@ -7031,7 +7063,42 @@ give_perks()
 		self maps\_zombiemode_perks::give_perk( "specialty_deadshot", true );
 		wait( 0.05 );
 
-		self GiveWeapon( "bowie_knife_zm" );
+	}
+	else if ( level.script == "zombie_cod5_sumpf" )
+	{
+
+		self maps\_zombiemode_perks::give_perk( "specialty_quickrevive", true );
+		wait( 0.05 );
+		self maps\_zombiemode_perks::give_perk( "specialty_fastreload", true );
+		wait( 0.05 );
+		self maps\_zombiemode_perks::give_perk( "specialty_armorvest", true );
+		wait( 0.05 );
+
+		if ( self.gamejustloaded )
+			self GiveWeapon( "tesla_gun_zm" );
+
+	}
+	else if ( level.script == "zombie_pentagon" )
+	{
+
+		self maps\_zombiemode_perks::give_perk( "specialty_quickrevive", true );
+		wait( 0.05 );
+		self maps\_zombiemode_perks::give_perk( "specialty_fastreload", true );
+		wait( 0.05 );
+		self maps\_zombiemode_perks::give_perk( "specialty_armorvest", true );
+		wait( 0.05 );
+		self maps\_zombiemode_perks::give_perk( "specialty_additionalprimaryweapon", true );
+		wait( 0.05 );
+
+		if ( self.gamejustloaded )
+		{
+
+			self giveweapon( "bowie_knife_zm" );
+			self giveweapon( "crossbow_explosive_upgraded_zm" );
+			self giveweapon( "mpl_zm" );
+			self takeweapon( "m1911_zm" );
+
+		}
 
 	}
 
@@ -7236,5 +7303,28 @@ tra_hud()
 		wait 0.05;
 
 	}
+
+}
+
+enable_traps_five()
+{
+
+	traps_array = getentarray( "trigger_battery_trap_fix", "targetname" );
+	
+	for ( i = 0; i < traps_array.size; i++ )
+	{
+
+		get_players()[0]._trap_piece = 1;
+		traps_array[i] build_trap();
+
+	}
+
+}
+
+build_trap()
+{
+
+	self notify( "trigger", get_players()[0] );
+	wait( 1 );
 
 }
