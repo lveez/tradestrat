@@ -26,7 +26,7 @@ power, mule, spawn, ak
 
 ## Downloads
 
-[Mod Download](https://www.mediafire.com/file/xyvlp9lcpaebzxj/tradestratv3.zip/file)
+[Mod Download](https://www.mediafire.com/file/qr7yfd2frepu6mj/tradestratv3.zip/file)
 
 [Patch Download](https://www.mediafire.com/file/3ezdhsn5wuc7smo/common_zombie_patch.ff/file)
 
